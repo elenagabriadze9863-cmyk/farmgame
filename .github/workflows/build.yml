@@ -11,6 +11,19 @@ jobs:
           distribution: 'temurin'
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+      - name: Bundle JS libs into HTML
+        run: |
+          cd android/app/src/main/assets/www
+          curl -sL https://unpkg.com/react@18/umd/react.production.min.js -o react.js
+          curl -sL https://unpkg.com/react-dom@18/umd/react-dom.production.min.js -o react-dom.js
+          curl -sL https://unpkg.com/@babel/standalone/babel.min.js -o babel.js
+          curl -sL https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js -o lucide.js
+          curl -sL https://cdn.tailwindcss.com -o tailwind.js
+          sed -i 's|https://unpkg.com/react@18/umd/react.production.min.js|react.js|g' index.html
+          sed -i 's|https://unpkg.com/react-dom@18/umd/react-dom.production.min.js|react-dom.js|g' index.html
+          sed -i 's|https://unpkg.com/@babel/standalone/babel.min.js|babel.js|g' index.html
+          sed -i 's|https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js|lucide.js|g' index.html
+          sed -i 's|https://cdn.tailwindcss.com|tailwind.js|g' index.html
       - name: Install Gradle
         run: |
           wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
