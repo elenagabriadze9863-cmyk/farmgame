@@ -17,41 +17,14 @@ jobs:
           node-version: '20'
       - name: Compile JSX and bundle libs
         run: |
-          npm install -g @babel/core @babel/cli @babel/preset-react @babel/preset-env 2>/dev/null
-          cd android/app/src/main/assets/www
-          curl -sL https://unpkg.com/react@18/umd/react.production.min.js -o react.js
-          curl -sL https://unpkg.com/react-dom@18/umd/react-dom.production.min.js -o react-dom.js
-          curl -sL https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js -o lucide.js
-          curl -sL https://cdn.tailwindcss.com -o tailwind.js
-          python3 - << 'PYEOF'
-import re
-with open('index.html', 'r') as f:
-    content = f.read()
-start_tag = '<script type="text/babel" data-presets="react">'
-start = content.find(start_tag) + len(start_tag)
-end = content.rfind('</script>')
-jsx_code = content[start:end]
-with open('/tmp/game.jsx', 'w') as f:
-    f.write(jsx_code)
-print(f"Extracted {len(jsx_code)} chars")
-PYEOF
-          babel /tmp/game.jsx --presets @babel/preset-react,@babel/preset-env --out-file game.js
-          python3 - << 'PYEOF'
-import re
-with open('index.html', 'r') as f:
-    content = f.read()
-content = content.replace('https://unpkg.com/react@18/umd/react.production.min.js', 'react.js')
-content = content.replace('https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', 'react-dom.js')
-content = content.replace('https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js', 'lucide.js')
-content = content.replace('https://cdn.tailwindcss.com', 'tailwind.js')
-content = re.sub(r'<script src="[^"]*babel[^"]*"[^>]*></script>\n?', '', content)
-start = content.find('<script type="text/babel"')
-end = content.rfind('</script>') + len('</script>')
-content = content[:start] + '<script src="game.js"></script>' + content[end:]
-with open('index.html', 'w') as f:
-    f.write(content)
-print("Done")
-PYEOF
+          npm install -g @babel/core @babel/cli @babel/preset-react @babel/preset-env
+          curl -sL https://unpkg.com/react@18/umd/react.production.min.js -o android/app/src/main/assets/www/react.js
+          curl -sL https://unpkg.com/react-dom@18/umd/react-dom.production.min.js -o android/app/src/main/assets/www/react-dom.js
+          curl -sL https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js -o android/app/src/main/assets/www/lucide.js
+          curl -sL https://cdn.tailwindcss.com -o android/app/src/main/assets/www/tailwind.js
+          python3 scripts/extract_jsx.py
+          babel /tmp/game.jsx --presets @babel/preset-react,@babel/preset-env --out-file android/app/src/main/assets/www/game.js
+          python3 scripts/patch_html.py
       - name: Install Gradle
         run: |
           wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
