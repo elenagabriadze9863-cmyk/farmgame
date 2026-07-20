@@ -11,11 +11,15 @@ jobs:
           distribution: 'temurin'
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+      - name: Install Gradle
+        run: |
+          wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
+          unzip -q gradle-8.7-bin.zip
+          echo "$PWD/gradle-8.7/bin" >> $GITHUB_PATH
       - name: Build APK
         run: |
           cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          gradle assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: farmgame-apk
