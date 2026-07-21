@@ -18,7 +18,9 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Copy full index.html to assets
-        run: cp www/index.html android/app/src/main/assets/www/index.html
+        run: |
+          mkdir -p android/app/src/main/assets/www
+          cp www/index.html android/app/src/main/assets/www/index.html
       - name: Download JS libs
         run: |
           curl -sL https://unpkg.com/react@18/umd/react.production.min.js -o android/app/src/main/assets/www/react.js
