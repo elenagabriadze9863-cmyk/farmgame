@@ -15,13 +15,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Compile JSX and bundle libs
+      - name: Install dependencies
+        run: npm install
+      - name: Download JS libs
         run: |
-          npm install @babel/core @babel/preset-react @babel/preset-env
           curl -sL https://unpkg.com/react@18/umd/react.production.min.js -o android/app/src/main/assets/www/react.js
           curl -sL https://unpkg.com/react-dom@18/umd/react-dom.production.min.js -o android/app/src/main/assets/www/react-dom.js
           curl -sL https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js -o android/app/src/main/assets/www/lucide.js
           curl -sL https://cdn.tailwindcss.com -o android/app/src/main/assets/www/tailwind.js
+      - name: Compile JSX
+        run: |
           python3 scripts/extract_jsx.py
           node scripts/compile.js
           python3 scripts/patch_html.py
