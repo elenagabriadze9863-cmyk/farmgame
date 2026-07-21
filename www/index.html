@@ -774,7 +774,7 @@ function FarmGame() {
   const achReady = ACHIEVEMENTS.filter((a) => !achClaimed[a.id] && achStats[a.statKey] >= a.target).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-200 via-amber-50 to-lime-50 flex flex-col font-sans">
+    <div className="h-screen bg-gradient-to-b from-sky-200 via-amber-50 to-lime-50 flex flex-col font-sans">
       <GameStyles />
       {splashPhase && <SplashScreen phase={splashPhase} onSkip={() => setSplashPhase(null)} />}
       <div className="bg-lime-700 text-lime-50 px-4 pt-4 pb-3 shadow-md relative z-10">
