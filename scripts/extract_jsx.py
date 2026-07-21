@@ -1,4 +1,4 @@
-with open('android/app/src/main/assets/www/index.html', 'r') as f:
+with open('www/index.html', 'r') as f:
     content = f.read()
 start_tag = '<script type="text/babel" data-presets="react">'
 start = content.find(start_tag) + len(start_tag)
