@@ -17,15 +17,13 @@ jobs:
           node-version: '20'
       - name: Compile JSX and bundle libs
         run: |
-          npm install @babel/core @babel/cli @babel/preset-react @babel/preset-env
+          npm install @babel/core @babel/preset-react @babel/preset-env
           curl -sL https://unpkg.com/react@18/umd/react.production.min.js -o android/app/src/main/assets/www/react.js
           curl -sL https://unpkg.com/react-dom@18/umd/react-dom.production.min.js -o android/app/src/main/assets/www/react-dom.js
           curl -sL https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js -o android/app/src/main/assets/www/lucide.js
           curl -sL https://cdn.tailwindcss.com -o android/app/src/main/assets/www/tailwind.js
           python3 scripts/extract_jsx.py
-          ./node_modules/.bin/babel /tmp/game.jsx \
-            --presets ./node_modules/@babel/preset-react,./node_modules/@babel/preset-env \
-            --out-file android/app/src/main/assets/www/game.js
+          node scripts/compile.js
           python3 scripts/patch_html.py
       - name: Install Gradle
         run: |
